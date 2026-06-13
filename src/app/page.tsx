@@ -5,7 +5,9 @@ import { io } from 'socket.io-client';
 
 const GRID_SIZE = 40;
 const CELL_SIZE = 18;
-const SERVER_URL = 'http://localhost:4000';
+function getServerUrl() {
+  return typeof window !== 'undefined' ? window.location.origin : 'http://localhost:4000';
+}
 
 type CellKey = string;
 
@@ -76,7 +78,7 @@ export default function Home() {
   const boardArray = useMemo(() => Array.from(board.values()), [board]);
 
   useEffect(() => {
-    const socket = io(SERVER_URL, {
+    const socket = io(getServerUrl(), {
       transports: ['websocket'],
       autoConnect: false,
     });
@@ -165,7 +167,7 @@ export default function Home() {
 
   const handleReset = async () => {
     try {
-      const response = await fetch(`${SERVER_URL}/reset-game`, { method: 'POST' });
+      const response = await fetch(`${getServerUrl()}/reset-game`, { method: 'POST' });
       const data = await response.json();
       if (!data.ok) {
         setError(data.error || 'Failed to reset game.');

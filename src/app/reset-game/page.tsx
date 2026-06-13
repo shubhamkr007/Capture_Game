@@ -3,7 +3,9 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-const SERVER_URL = 'http://localhost:4000';
+function getServerUrl() {
+  return typeof window !== 'undefined' ? window.location.origin : 'http://localhost:4000';
+}
 
 export default function ResetGamePage() {
   const router = useRouter();
@@ -12,7 +14,7 @@ export default function ResetGamePage() {
   useEffect(() => {
     async function resetGame() {
       try {
-        const response = await fetch(`${SERVER_URL}/reset-game`, { method: 'POST' });
+        const response = await fetch(`${getServerUrl()}/reset-game`, { method: 'POST' });
         const data = await response.json();
 
         if (!data.ok) {
